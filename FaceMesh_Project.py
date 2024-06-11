@@ -4,14 +4,14 @@ import time
 
 capture = cv2.VideoCapture(0)
 
-if not capture.isOpened:
+if not capture.isOpened():
     print("Webcam could not be opened.")
     exit()
 
 mpFaceMesh = mp.solutions.face_mesh
-FaceMesh = mpFaceMesh.FaceMesh(max_num_faces = 2)
+FaceMesh = mpFaceMesh.FaceMesh(max_num_faces=2)
 mpDraw = mp.solutions.drawing_utils
-drawSpec = mpDraw.DrawingSpec(thickness = 1, circle_radius = 2)
+drawSpec = mpDraw.DrawingSpec(thickness=1, circle_radius=2)
 
 previousTime = 0
 currentTime = 0
@@ -19,7 +19,10 @@ currentTime = 0
 while True:
     success, vidObject = capture.read()
 
-    imgRGB =    cv2.cvtColor(vidObject, cv2.COLOR_BGR2RGB)
+    if not success:
+        break
+    
+    imgRGB = cv2.cvtColor(vidObject, cv2.COLOR_BGR2RGB)
 
     results = FaceMesh.process(imgRGB)
 
@@ -27,7 +30,9 @@ while True:
     
     if detections:
         for detection in detections:
-            mpDraw.draw_landmarks(vidObject, detection, mpFaceMesh.FACE_CONNECTIONS, drawSpec, drawSpec)
+            mpDraw.draw_landmarks(
+                vidObject, detection, mpFaceMesh.FACEMESH_TESSELATION, drawSpec, drawSpec
+            )
             for landmark in detection.landmark:
                 print(landmark)
 
