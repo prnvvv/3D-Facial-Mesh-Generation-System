@@ -4,6 +4,10 @@ import time
 
 capture = cv2.VideoCapture(0)
 
+if not capture.isOpened:
+    print("Webcam could not be opened.")
+    exit()
+
 mpFaceMesh = mp.solutions.face_mesh
 FaceMesh = mpFaceMesh.FaceMesh(max_num_faces = 2)
 mpDraw = mp.solutions.drawing_utils
